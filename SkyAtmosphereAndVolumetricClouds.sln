@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{10110d2e-c84c-2a54-1989-fb614bb0ca6b}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyAtmosphere.Runtime", "SkyAtmosphere.Runtime.csproj", "{c356f1d6-f3ac-4cc4-345a-a0982018b337}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{45c8e354-92b6-2492-b1a4-5bf0f537c53d}"
 EndProject
 Global
@@ -12,6 +14,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{10110d2e-c84c-2a54-1989-fb614bb0ca6b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10110d2e-c84c-2a54-1989-fb614bb0ca6b}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c356f1d6-f3ac-4cc4-345a-a0982018b337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c356f1d6-f3ac-4cc4-345a-a0982018b337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45c8e354-92b6-2492-b1a4-5bf0f537c53d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45c8e354-92b6-2492-b1a4-5bf0f537c53d}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection

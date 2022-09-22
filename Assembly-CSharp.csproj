@@ -43,6 +43,10 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
      <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+     <None Include="Assets\SkyAtmosphereAndVolumetricClouds\Shaders\FastMath.hlsl" />
+     <None Include="Assets\SkyAtmosphereAndVolumetricClouds\Shaders\SkyAtmosphere.hlsl" />
+     <None Include="Assets\SkyAtmosphereAndVolumetricClouds\Shaders\SkyAtmosphereApply.shader" />
+     <None Include="Assets\SkyAtmosphereAndVolumetricClouds\Shaders\SkyAtmosphere.compute" />
      <Reference Include="UnityEngine">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.10f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>
@@ -287,28 +291,28 @@
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.10f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Unsafe">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Cecil.Mdb">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Cecil.Pdb">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Cecil">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Cecil.Rocks">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.visualscripting@1.7.8\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
      </Reference>
      <Reference Include="ReportGeneratorMerged">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.testtools.codecoverage@1.0.1\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.testtools.codecoverage@1.0.1\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
      </Reference>
      <Reference Include="Newtonsoft.Json">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
      </Reference>
      <Reference Include="mscorlib">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.10f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\mscorlib.dll</HintPath>
@@ -686,148 +690,152 @@
      <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.10f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VSCode.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Universal.Shaders">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TextMeshPro.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.State.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Searcher.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Searcher.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Searcher.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor.UI">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Rider.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
      </Reference>
      <Reference Include="UnityEngine.SpatialTracking">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.SpatialTracking.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.SpatialTracking.dll</HintPath>
      </Reference>
      <Reference Include="UnityEngine.UI">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
      </Reference>
      <Reference Include="Unity.EditorCoroutines.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.ShaderGraph.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Mathematics.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Flow.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.2D.Tilemap.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Universal.Runtime">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
      </Reference>
      <Reference Include="PPv2URPConverters">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualStudio.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Timeline">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Core.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TextMeshPro">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.2D.Sprite.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Core.Runtime">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Flow">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
      </Reference>
      <Reference Include="Unity.PlasticSCM.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Services.Core">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Core">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Mathematics">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Services.Core.Analytics">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Burst">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Universal.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
      </Reference>
      <Reference Include="UnityEngine.XR.LegacyInputHelpers">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Shared.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Services.Core.Environments">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Timeline.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor.XR.LegacyInputHelpers">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor.SpatialTracking">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.SpatialTracking.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\UnityEditor.SpatialTracking.dll</HintPath>
      </Reference>
      <Reference Include="Unity.TestTools.CodeCoverage.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.RenderPipelines.Core.Editor">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.State">
-     <HintPath>F:\Unity\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
+     <HintPath>F:\Github\SkyAtmosphereAndVolumetricClouds\Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
      </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="SkyAtmosphere.Runtime.csproj">
+      <Project>{c356f1d6-f3ac-4cc4-345a-a0982018b337}</Project>
+      <Name>SkyAtmosphere.Runtime</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

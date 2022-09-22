@@ -1,0 +1,288 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel TransmittanceLut
+#pragma kernel MultiScatteringLut
+#pragma kernel SkyViewLut
+#pragma kernel CameraVolumeLut
+
+#pragma enable_d3d11_debug_symbols
+#include "SkyAtmosphere.hlsl"
+
+RWTexture2D<float3> _RWTransmittanceLut;
+RWTexture2D<float3> _RWMultiScatteredLut;
+RWTexture2D<float3> _RWSkyViewLut;
+RWTexture3D<float4> _RWCameraVolumeLut;
+struct SingleScatteringResult
+{
+    float3 L;						// Scattered light (luminance)
+    float3 OpticalDepth;			// Optical depth (1/m)
+    float3 Transmittance;			// Transmittance in [0,1] (unitless)
+    float3 MultiScatAs1;
+};
+
+struct MediumSampleRGB
+{
+    float3 Scattering;
+    float3 Absorption;
+    float3 Extinction;
+
+    float3 ScatteringMie;
+    float3 AbsorptionMie;
+    float3 ExtinctionMie;
+
+    float3 ScatteringRay;
+    float3 AbsorptionRay;
+    float3 ExtinctionRay;
+
+    float3 ScatteringOzo;
+    float3 AbsorptionOzo;
+    float3 ExtinctionOzo;
+
+    float3 Albedo;
+};
+
+MediumSampleRGB SampleMediumRGB(in float3 WorldPos)
+{
+    const float SampleHeight = max(0.0, (length(WorldPos) - BottomRadiusKm));
+
+    const float DensityMie = exp(-MieDensityExpScale * SampleHeight);
+
+    const float DensityRay = exp(-RayleighDensityExpScale * SampleHeight);
+
+    const float DensityOzo = max(1 - abs(SampleHeight - OzoneAbsorptionTipAltitude) / OzoneAbsorptionWidth, 0);
+
+    MediumSampleRGB s;
+
+    s.ScatteringMie = DensityMie * MieScattering;
+    s.AbsorptionMie = DensityMie * MieAbsorption;
+    s.ExtinctionMie = s.ScatteringMie + s.AbsorptionMie;
+
+    s.ScatteringRay = DensityRay * RayleighScattering.rgb;
+    s.AbsorptionRay = 0.0f;
+    s.ExtinctionRay = s.ScatteringRay + s.AbsorptionRay;
+
+    s.ScatteringOzo = 0.0f;
+    s.AbsorptionOzo = DensityOzo * OzoneAbsorption.rgb;
+    s.ExtinctionOzo = s.ScatteringOzo + s.AbsorptionOzo;
+
+    s.Scattering = s.ScatteringMie + s.ScatteringRay + s.ScatteringOzo;
+    s.Absorption = s.AbsorptionMie + s.AbsorptionRay + s.AbsorptionOzo;
+    s.Extinction = s.ExtinctionMie + s.ExtinctionRay + s.ExtinctionOzo;
+    s.Albedo = s.Scattering / max(0.001f, s.Extinction);
+
+    return s;
+}
+
+
+#define SAMPLE_COUNT 15
+
+float3 GetTransmittance(in float LightZenithCosAngle, in float PHeight)
+{
+    float2 UV;
+    LutTransmittanceParamsToUv(PHeight, LightZenithCosAngle, UV);
+    float3 TransmittanceToLight = _TransmittanceLut.SampleLevel(sampler_LinearClamp, UV, 0).rgb;
+    return TransmittanceToLight;
+}
+
+float3 GetMultipleScattering(float3 WorlPos, float ViewZenithCosAngle)
+{
+    float2 UV = saturate(float2(ViewZenithCosAngle*0.5f + 0.5f, (length(WorlPos) - BottomRadiusKm) / (TopRadiusKm - BottomRadiusKm)));
+    // We do no apply UV transform to sub range here as it has minimal impact.
+    float3 MultiScatteredLuminance = _MultiScatteredLut.SampleLevel(sampler_LinearClamp, UV, 0).rgb;
+    return MultiScatteredLuminance;
+}
+
+
+SingleScatteringResult IntegrateSingleScattering(float3 WorldPos, float3 WorldDir, float3 LightDir,
+    bool Lighting, bool Ground, bool MultiScatteringAndNonUniformPhase, float MaxDistance = 999999.9f)
+{
+    SingleScatteringResult Result;
+    Result.L = 0;
+    Result.OpticalDepth = 0;
+    Result.Transmittance = 1.0f;
+    Result.MultiScatAs1 = 0;
+
+    // Compute next intersection with atmosphere or ground 
+    float3 PlanetO = float3(0.0f, 0.0f, 0.0f);
+    float tBottom = RaySphereIntersectNearest(WorldPos, WorldDir, PlanetO, BottomRadiusKm);
+    float tTop = RaySphereIntersectNearest(WorldPos, WorldDir, PlanetO, TopRadiusKm);
+    float tMax = 0.0f;
+    if (tBottom < 0.0f)
+    {
+        if (tTop < 0.0f)
+        {
+            tMax = 0.0f; // No intersection with planet nor its atmosphere: stop right away  
+            return Result;
+        }
+        else
+        {
+            tMax = tTop;
+        }
+    }
+    else
+    {
+        if (tTop > 0.0f)
+        {
+            tMax = min(tTop, tBottom);
+        }
+    }
+    tMax = min(tMax, MaxDistance);
+    
+    float dt = tMax / SAMPLE_COUNT;
+    float t = 0;
+    float Throughput = 1.0f;
+    float3 OpticalDepth = 0;
+    float3 L = 0;
+
+    float cosTheta = dot(LightDir, WorldDir);
+    float MiePhaseValueLight = HgPhase(MieAnisotropy, -cosTheta);	// negate cosTheta because due to WorldDir being a "in" direction. 
+    float RayleighPhaseValueLight = RayleighPhase(cosTheta);
+    
+    for (float i = 0.5f; i < SAMPLE_COUNT; i += 1.0f)
+    {
+        float t = tMax * i / SAMPLE_COUNT;
+        float3 P = WorldPos + t * WorldDir;
+        float PHeight = length(P);
+        MediumSampleRGB Medium = SampleMediumRGB(P);
+        float3 SampleOpticalDepth = Medium.Extinction * dt;
+        float3 SampleTransmittance = exp(-SampleOpticalDepth);
+        OpticalDepth += SampleOpticalDepth;
+
+        if(Lighting)
+        {
+            float3 UpVector = P / PHeight;
+            float LightZenithCosAngle = dot(LightDir, UpVector);
+            float3 TransmittanceToLight = GetTransmittance(LightZenithCosAngle, PHeight);
+
+            float3 PhaseTimesScattering = 0; 
+            
+            if(MultiScatteringAndNonUniformPhase)
+            {
+                PhaseTimesScattering = Medium.ScatteringMie * MiePhaseValueLight + Medium.ScatteringRay * RayleighPhaseValueLight;
+            }
+            else
+            {
+                const float uniformPhase = 1.0f / (4 * PI);
+                PhaseTimesScattering = Medium.Scattering * uniformPhase;
+            }
+            
+            float tPlanet = RaySphereIntersectNearest(P, LightDir, 0.001f  * UpVector, BottomRadiusKm);
+            float PlanetShadow = tPlanet >= 0.0f ? 0.0f : 1.0f;
+
+            float3 S = PlanetShadow * TransmittanceToLight * PhaseTimesScattering;
+            if (MultiScatteringAndNonUniformPhase)
+            {
+                float3 MultiScatteredLuminance = GetMultipleScattering(P, LightZenithCosAngle);
+                S += MultiScatteredLuminance * Medium.Scattering;
+            }
+            Result.MultiScatAs1 += Throughput * Medium.Scattering * dt;
+            float3 Sint = (S - S * SampleTransmittance) / Medium.Extinction;
+            L += Throughput * Sint;
+            Throughput *= SampleTransmittance;
+        }
+    }
+
+    if (Ground && tMax == tBottom)
+    {
+        float3 P = WorldPos + tBottom * WorldDir;
+        float PHeight = length(P);
+
+        const float3 UpVector = P / PHeight;
+        float LightZenithCosAngle = dot(LightDir, UpVector);
+        float3 TransmittanceToLight = GetTransmittance(LightZenithCosAngle, PHeight);
+
+        const float NdotL = saturate(dot(UpVector, LightDir));
+        L += TransmittanceToLight * Throughput * NdotL * GroundAlbedo.rgb / PI;
+    }
+    
+    Result.L = L;
+    Result.OpticalDepth = OpticalDepth;
+    Result.Transmittance = Throughput;
+    return Result;
+}
+
+[numthreads(8, 8, 1)]
+void TransmittanceLut(uint3 id : SV_DispatchThreadID)
+{
+    if(all(id.xy < (uint2)(TransmittanceLutSize.xy)))
+    {
+        float2 UV = (float2(id.xy) + 0.5f) * TransmittanceLutSize.zw;
+        float ViewHeight;
+        float ViewZenithCosAngle;
+        UvToLutTransmittanceParams(ViewHeight, ViewZenithCosAngle, UV);
+        float3 WorldPos = float3(0, 0, ViewHeight);
+        float3 WorldDir = float3(0, sqrt(1 - ViewZenithCosAngle * ViewZenithCosAngle), ViewZenithCosAngle);
+        SingleScatteringResult Result = IntegrateSingleScattering(WorldPos, WorldDir, float3(0,0,1), false, false, false);
+        _RWTransmittanceLut[id.xy] = exp(-Result.OpticalDepth);
+    }
+}
+
+[numthreads(8, 8, 1)]
+void MultiScatteringLut(uint3 id : SV_DispatchThreadID)
+{
+    if(all(id.xy < (uint2)(MultiScatteringLutSize.xy)))
+    {
+        float2 PixPos = float2(id.xy) + 0.5f;
+        float CosLightZenithAngle = (PixPos.x * MultiScatteringLutSize.z) * 2.0f - 1.0f;
+        float3 LightDir = float3(0.0f, sqrt(saturate(1.0f - CosLightZenithAngle * CosLightZenithAngle)), CosLightZenithAngle);
+        float ViewHeight = BottomRadiusKm + (PixPos.y * MultiScatteringLutSize.w) * (TopRadiusKm - BottomRadiusKm);
+        float3 WorldPos = float3(0.0f, 0.0f, ViewHeight);
+        float3 WorldDir = float3(0.0f, 0.0f, 1.0f);
+        SingleScatteringResult Result0 = IntegrateSingleScattering(WorldPos, WorldDir, LightDir, true, true, false);
+        SingleScatteringResult Result1 = IntegrateSingleScattering(WorldPos, -WorldDir, LightDir, true, true, false);
+        
+        float3 MultiScatAs1 = (Result0.MultiScatAs1 + Result1.MultiScatAs1) * 0.5f;
+        float3 InScatteredLuminance = (Result0.L + Result1.L) * 0.5f;
+        float3 L = InScatteredLuminance / (1 - MultiScatAs1);
+        _RWMultiScatteredLut[id.xy] = L;
+    }
+}
+
+[numthreads(8, 8, 1)]
+void SkyViewLut(uint3 id : SV_DispatchThreadID)
+{
+    if(all(id.xy < (uint2)(SkyViewLutSize.xy)))
+    {
+        float2 PixPos = float2(id.xy) + 0.5f;
+        float2 UV = PixPos * SkyViewLutSize.zw;
+        float ViewHeight = GetCameraViewHeight();
+        float3 WorldPos = float3(0, 0, ViewHeight);
+        
+        float3 WorldDir;
+        UvToSkyViewLutParams(WorldDir, ViewHeight, UV);
+
+        float3 LightDirection = UnityDirectionToAtmosphereDirection(_MainLightPosition.xyz);
+        SingleScatteringResult result = IntegrateSingleScattering(WorldPos, WorldDir, LightDirection, true, false, true);
+        _RWSkyViewLut[id.xy] = result.L * _MainLightColor.xyz;
+    }
+}
+
+[numthreads(4, 4, 4)]
+void CameraVolumeLut(uint3 id : SV_DispatchThreadID)
+{
+    float2 PixPos = float2(id.xy) + 0.5f;
+    float2 UV = PixPos * CameraVolumeLutInvSize.xy;
+    float3 NDCPos = float3(UV * 2 - 1.0f, 0.0f);
+    float Slice = (float(id.z) + 0.5f) * CameraVolumeLutInvSize.z;
+    Slice *= Slice;
+    Slice *= CameraVolumeLutSlice;
+    
+    float3 WorldDir = GetWorldDir(UV);
+    float ViewHeight = GetCameraViewHeight();
+    float3 WorldPos = float3(0, 0, ViewHeight);
+    float CameraToVoxelLength = Slice * CameraVolumeSliceDepthKm;
+    float3 VoxelPos = WorldPos + CameraToVoxelLength * WorldDir;
+    float VoxelHeight = length(VoxelPos);
+    const float UnderGround = VoxelHeight < BottomRadiusKm;
+    
+    float PlanetNearT = RaySphereIntersectNearest(WorldPos, WorldDir, float3(0, 0, 0), BottomRadiusKm);
+    bool BelowHorizon = PlanetNearT > 0.0f && CameraToVoxelLength > PlanetNearT;
+    
+    if (BelowHorizon || UnderGround)
+    {
+    }
+    
+    float3 LightDirection = UnityDirectionToAtmosphereDirection(_MainLightPosition.xyz);
+    SingleScatteringResult result = IntegrateSingleScattering(WorldPos, WorldDir, LightDirection, true, false, true, CameraToVoxelLength);
+    const float Transmittance = dot(result.Transmittance, float3(1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f));
+    _RWCameraVolumeLut[id] = float4(result.L * _MainLightColor.xyz, Transmittance);
+}
